@@ -9,7 +9,7 @@
 
 ```bash
 git clone https://github.com/unleftie/wordpress-compose.git
-cd compose-wordpress
+cd wordpress-compose
 cp .env.example .env
 docker compose up -d
 ```
