@@ -1,0 +1,44 @@
+name: wordpress
+services:
+  mariadb:
+    container_name: ${PROJECT_TAG}-mariadb
+    image: mariadb:10.10-jammy
+    env_file:
+      - ".env"
+    command: "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "mariadb_data:/var/lib/mysql"
+    restart: always
+    expose:
+      - "3306"
+      - "33060"
+  wordpress:
+    container_name: ${PROJECT_TAG}-wordpress
+    image: wordpress:6-apache
+    env_file:
+      - ".env"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "wordpress_data:/var/www/html"
+    ports:
+      - "0.0.0.0:${WORDPRESS_PORT}:80/tcp"
+    restart: always
+  sftp:
+    container_name: ${PROJECT_TAG}-sftp
+    image: atmoz/sftp:alpine
+    env_file:
+      - ".env"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "wordpress_data:/home/${SFTP_USER}/wordpress"
+    ports:
+      - "0.0.0.0:${SFTP_PORT}:22/tcp"
+    command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
+
+volumes:
+  mariadb_data:
+  wordpress_data:
