@@ -1,0 +1,11 @@
+# /etc/cron.d/wordpress_mariadb_daily_backup: crontab fragment for creating SQL dump file with MariaDB data
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# creating SQL dump file with MariaDB data
+# starts every day at 02:00 AM
+0 2 * * * root mkdir -p /dumps/daily && docker exec test-mariadb sh -c 'mysqldump --all-databases -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' >/dumps/daily/dump_$(date +\%H-\%M_\%m-\%d-\%y).sql.gz
+
+# delete files older than 14 days
+# starts every day at 03:00 AM
+0 3 * * * root find /dumps/daily -name "dump_*.sql.gz" -type f -mtime +14 -delete
