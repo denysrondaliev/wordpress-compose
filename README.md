@@ -26,6 +26,13 @@ docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D
 docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
 ```
 
+## Creating SQL dump file with MariaDB data
+
+```bash
+docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
+docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' > dump_name_$(date +%H-%M_%m-%d-%y).sql.gz
+```
+
 ## Restoring WordPress data
 
 Note that you need to use custom wp-config for Docker, see [this](https://github.com/docker-library/wordpress/blob/master/wp-config-docker.php) example
