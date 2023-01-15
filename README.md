@@ -47,6 +47,10 @@ docker exec -i test-wordpress sh -c 'chown -R www-data:www-data /var/www/html'
 docker exec -i test-wordpress sh -c 'rm -rfd /var/www/wordpress_data'
 ```
 
+## Creating WordPress data backup
+
+docker cp test-wordpress:/var/www/html wordpress_data/
+
 ## Setup nginx as proxy server
 
 You can find nginx configs for WordPress [here](https://www.digitalocean.com/community/tools/nginx?domains.0.php.wordPressRules=true)
