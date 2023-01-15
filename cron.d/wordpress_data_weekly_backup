@@ -5,7 +5,7 @@ TARGET_PATH=/backups/data/weekly
 
 # creating wordpress data backup
 # starts every week at 02:00 AM on Saturday
-0 2 * * 6 root export DATE=$(date +\%H-\%M_\%m-\%d-\%y) && mkdir -p $TARGET_PATH && docker cp test-wordpress:/var/www/html $TARGET_PATH/backup_$DATE && zip -qr $TARGET_PATH/backup_$DATE.zip $TARGET_PATH/backup_$DATE && rm -rfd $TARGET_PATH/backup_$DATE
+0 2 * * 6 root export DATE=$(date +\%H-\%M_\%m-\%d-\%y) && mkdir -p $TARGET_PATH && docker cp uadopomoga-wordpress:/var/www/html $TARGET_PATH/backup_$DATE && zip -qr $TARGET_PATH/backup_$DATE.zip $TARGET_PATH/backup_$DATE && rm -rfd $TARGET_PATH/backup_$DATE
 
 # delete files older than 60 days
 # starts every week at 03:00 AM on Saturday
