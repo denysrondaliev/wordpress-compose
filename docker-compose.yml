@@ -10,7 +10,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "mariadb_data:/var/lib/mysql"
-    restart: always
+    restart: unless-stopped
     expose:
       - "3306"
       - "33060"
@@ -31,7 +31,7 @@ services:
       - "wordpress_data:/var/www/html"
     ports:
       - "0.0.0.0:${WORDPRESS_PORT}:80/tcp"
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://127.0.0.1:80" ]
       interval: 60s
@@ -49,6 +49,7 @@ services:
       - "wordpress_data:/home/${SFTP_USER}/wordpress"
     ports:
       - "0.0.0.0:${SFTP_PORT}:22/tcp"
+    restart: unless-stopped
     command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
     healthcheck:
       test: sshd -t && netstat -ntulp | grep -q "0.0.0.0:22"
