@@ -15,7 +15,7 @@ services:
       - "3306"
       - "33060"
     healthcheck:
-      test: mysqladmin ping --silent -u root --password=${MARIADB_ROOT_PASSWORD} | grep -q "mysqld is alive"
+      test: healthcheck.sh --su=root --connect
       interval: 60s
       timeout: 5s
       retries: 5
