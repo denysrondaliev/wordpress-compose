@@ -2,7 +2,7 @@ name: wordpress
 services:
   mariadb:
     container_name: ${PROJECT_TAG}-mariadb
-    image: mariadb:lts
+    image: mariadb:11-jammy
     env_file:
       - ".env"
     command: "--default-authentication-plugin=mysql_native_password"
