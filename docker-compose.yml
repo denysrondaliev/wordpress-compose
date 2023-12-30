@@ -2,7 +2,7 @@ name: wordpress
 services:
   mariadb:
     container_name: ${PROJECT_TAG}-mariadb
-    image: mariadb:10.10-jammy
+    image: mariadb:lts
     env_file:
       - ".env"
     command: "--default-authentication-plugin=mysql_native_password"
@@ -38,25 +38,25 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-  sftp:
-    container_name: ${PROJECT_TAG}-sftp
-    image: atmoz/sftp:alpine
-    env_file:
-      - ".env"
-    volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-      - "wordpress_data:/home/${SFTP_USER}/wordpress"
-    ports:
-      - "0.0.0.0:${SFTP_PORT}:22/tcp"
-    restart: unless-stopped
-    command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
-    healthcheck:
-      test: sshd -t && netstat -ntulp | grep -q "0.0.0.0:22"
-      interval: 60s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+  # sftp:
+  #   container_name: ${PROJECT_TAG}-sftp
+  #   image: atmoz/sftp:alpine
+  #   env_file:
+  #     - ".env"
+  #   volumes:
+  #     - "/etc/timezone:/etc/timezone:ro"
+  #     - "/etc/localtime:/etc/localtime:ro"
+  #     - "wordpress_data:/home/${SFTP_USER}/wordpress"
+  #   ports:
+  #     - "0.0.0.0:${SFTP_PORT}:22/tcp"
+  #   restart: unless-stopped
+  #   command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
+  #   healthcheck:
+  #     test: sshd -t && netstat -ntulp | grep -q "0.0.0.0:22"
+  #     interval: 60s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
 
 volumes:
   mariadb_data:
