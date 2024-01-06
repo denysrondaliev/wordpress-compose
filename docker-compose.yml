@@ -22,7 +22,7 @@ services:
       start_period: 30s
   wordpress:
     container_name: ${PROJECT_TAG}-wordpress
-    image: wordpress:6-apache
+    image: wordpress:6-php8.3-apache
     env_file:
       - ".env"
     volumes:
