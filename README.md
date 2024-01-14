@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/unleftie/wordpress-compose.git
+git clone https://github.com/denysrondaliev/wordpress-compose.git
 cd wordpress-compose
 cp .env.example .env
 docker compose up -d
