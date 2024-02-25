@@ -39,8 +39,6 @@ services:
   #   env_file:
   #     - ".env"
   #   volumes:
-  #     - "/etc/timezone:/etc/timezone:ro"
-  #     - "/etc/localtime:/etc/localtime:ro"
   #     - "wordpress_data:/home/${SFTP_USER}/wordpress"
   #   ports:
   #     - "${SFTP_PORT}:22/tcp"
