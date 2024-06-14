@@ -3,7 +3,7 @@
 ## Dependencies
 
 - [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose plugin](https://docs.docker.com/compose/install/linux/)
+- [Docker Compose plugin](https://docs.docker.com/compose/install/)
 
 ## Installation
 
@@ -18,7 +18,7 @@ docker compose up -d
 
 Note that you need to fix URL value at **wp_options** table, if it is different from the past one
 
-File **dump_name.sql** should contain old WordPress database and tables. Value $WORDPRESS_DB_NAME must match this database
+File **dump_name.sql** should contain old WP database and tables. Value $WORDPRESS_DB_NAME must match this database
 
 ```bash
 docker exec -i test-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
@@ -33,7 +33,7 @@ docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -
 docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' > dump_name_$(date +%H-%M_%m-%d-%y).sql.gz
 ```
 
-## Restoring WordPress data
+## Restoring WP data
 
 Note that you need to use custom wp-config for Docker, see [this](https://github.com/docker-library/wordpress/blob/master/wp-config-docker.php) example
 
@@ -47,9 +47,17 @@ docker exec -i test-wordpress sh -c 'chown -R www-data:www-data /var/www/html'
 docker exec -i test-wordpress sh -c 'rm -rfd /var/www/wordpress_data'
 ```
 
-## Creating WordPress data backup
+## Creating WP data backup
 
+```bash
 docker cp test-wordpress:/var/www/html wordpress_data/
+```
+
+## WP-CLI usage
+
+```bash
+docker compose run --rm wordpress-cli "--info"
+```
 
 ## Setup nginx as proxy server
 
