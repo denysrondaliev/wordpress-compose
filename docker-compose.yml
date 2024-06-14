@@ -10,16 +10,18 @@ services:
     restart: unless-stopped
     expose:
       - "3306"
-      - "33060"
     healthcheck:
       test: healthcheck.sh --su=root --connect
-      interval: 60s
+      interval: 120s
       timeout: 5s
-      retries: 5
+      retries: 2
       start_period: 30s
   wordpress:
     container_name: ${PROJECT_TAG}-wordpress
     image: wordpress:6-php8.3-apache
+    depends_on:
+      mariadb:
+        condition: service_started
     env_file:
       - ".env"
     volumes:
@@ -33,23 +35,42 @@ services:
       timeout: 5s
       retries: 2
       start_period: 30s
-  # sftp:
-  #   container_name: ${PROJECT_TAG}-sftp
-  #   image: atmoz/sftp:alpine
-  #   env_file:
-  #     - ".env"
-  #   volumes:
-  #     - "wordpress_data:/home/${SFTP_USER}/wordpress"
-  #   ports:
-  #     - "${SFTP_PORT}:22/tcp"
-  #   restart: unless-stopped
-  #   command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
-  #   healthcheck:
-  #     test: sshd -t && netstat -ntulp | grep -q "0.0.0.0:22"
-  #     interval: 60s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 30s
+  wordpress-cli:
+    container_name: ${PROJECT_TAG}-wordpress-cli
+    image: wordpress:cli-php8.3
+    depends_on:
+      mariadb:
+        condition: service_started
+    profiles:
+      - wordpress-cli
+    entrypoint: wp
+    command: "--info"
+    env_file:
+      - ".env"
+    volumes:
+      - "wordpress_data:/var/www/html"
+    restart: no
+  sftp:
+    container_name: ${PROJECT_TAG}-sftp
+    image: atmoz/sftp:alpine
+    depends_on:
+      - wordpress
+    profiles:
+      - sftp
+    env_file:
+      - ".env"
+    volumes:
+      - "wordpress_data:/home/${SFTP_USER}/wordpress"
+    ports:
+      - "${SFTP_PORT}:22/tcp"
+    restart: unless-stopped
+    command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}:${SFTP_GID}
+    healthcheck:
+      test: sshd -t && netstat -ntulp | grep -q "0.0.0.0:22"
+      interval: 120s
+      timeout: 5s
+      retries: 2
+      start_period: 30s
 
 volumes:
   mariadb_data:
