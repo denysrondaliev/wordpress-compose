@@ -27,7 +27,9 @@ services:
     volumes:
       - "wordpress_data:/var/www/html"
     ports:
-      - "${WORDPRESS_PORT}:8080/tcp"
+      - "${WORDPRESS_PORT}:80/tcp"
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
@@ -45,7 +47,7 @@ services:
     profiles:
       - wordpress-cli
     entrypoint: wp
-    command: "--info"
+    command: ["cli", "version"]
     env_file:
       - ".env"
     volumes:
@@ -55,7 +57,8 @@ services:
     container_name: ${PROJECT_TAG}-sftp
     image: atmoz/sftp:alpine
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_started
     profiles:
       - sftp
     env_file:
