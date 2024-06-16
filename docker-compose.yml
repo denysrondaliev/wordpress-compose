@@ -1,7 +1,8 @@
 services:
   mariadb:
     container_name: ${PROJECT_TAG}-mariadb
-    image: mariadb:11-jammy
+    image: mariadb:lts
+    user: "mysql"
     env_file:
       - ".env"
     volumes:

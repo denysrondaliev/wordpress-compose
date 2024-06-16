@@ -57,6 +57,10 @@ docker cp test-wordpress:/var/www/html/wp-content wp-content/
 docker compose run --rm wordpress-cli "cli" "version"
 ```
 
+## Running as an arbitrary user
+
+See the "[Running as an arbitrary user](https://github.com/docker-library/docs/blob/master/php/README.md#running-as-an-arbitrary-user)" section of the php image documentation⁠.
+
 ## Setup nginx as proxy server
 
 You can find nginx configs for WordPress [here](https://www.digitalocean.com/community/tools/nginx?domains.0.php.wordPressRules=true)
