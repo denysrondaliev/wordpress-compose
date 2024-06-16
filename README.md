@@ -31,7 +31,6 @@ docker restart test-mariadb
 
 ```bash
 docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
-docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' > dump_name_$(date +%H-%M_%m-%d-%y).sql.gz
 ```
 
 ## Restoring wp-content data from backup
