@@ -21,10 +21,10 @@ Note that you need to fix URL value at **wp_options** table, if it is different 
 File **dump_name.sql** should contain old WP database and tables. Value $WORDPRESS_DB_NAME must match this database
 
 ```bash
-docker exec -i uadopomoga-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
-docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
-docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
-docker restart uadopomoga-mariadb
+docker exec -i test-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
+docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
+docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
+docker restart test-mariadb
 ```
 
 ## Creating SQL dump file with MariaDB data
@@ -37,17 +37,17 @@ docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u roo
 ## Restoring wp-content data from backup
 
 ```bash
-docker cp wp-content/ uadopomoga-wordpress:/tmp/wp-content/
-docker exec -i uadopomoga-wordpress sh -c 'rm -rf /var/www/html/wp-content'
-docker exec -i uadopomoga-wordpress sh -c 'mv /tmp/wp-content/ /var/www/html/wp-content/'
-docker exec -i uadopomoga-wordpress sh -c 'chown -R www-data:www-data /var/www/html/wp-content/'
-docker restart uadopomoga-wordpress
+docker cp wp-content/ test-wordpress:/tmp/wp-content/
+docker exec -i test-wordpress sh -c 'rm -rf /var/www/html/wp-content'
+docker exec -i test-wordpress sh -c 'mv /tmp/wp-content/ /var/www/html/wp-content/'
+docker exec -i test-wordpress sh -c 'chown -R www-data:www-data /var/www/html/wp-content/'
+docker restart test-wordpress
 ```
 
 ## Creating backup with wp-content data
 
 ```bash
-docker cp uadopomoga-wordpress:/var/www/html/wp-content wp-content/
+docker cp test-wordpress:/var/www/html/wp-content wp-content/
 ```
 
 ## WP-CLI usage
