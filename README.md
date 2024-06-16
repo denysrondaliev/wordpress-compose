@@ -21,36 +21,33 @@ Note that you need to fix URL value at **wp_options** table, if it is different 
 File **dump_name.sql** should contain old WP database and tables. Value $WORDPRESS_DB_NAME must match this database
 
 ```bash
-docker exec -i test-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
-docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
-docker exec -i test-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
+docker exec -i uadopomoga-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
+docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
+docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
+docker restart uadopomoga-mariadb
 ```
 
 ## Creating SQL dump file with MariaDB data
 
 ```bash
-docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
-docker exec test-mariadb sh -c 'mysqldump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' > dump_name_$(date +%H-%M_%m-%d-%y).sql.gz
+docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
+docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' > dump_name_$(date +%H-%M_%m-%d-%y).sql.gz
 ```
 
-## Restoring WP data
-
-Note that you need to use custom wp-config for Docker, see [this](https://github.com/docker-library/wordpress/blob/master/wp-config-docker.php) example
-
-Directory **wordpress_data/** should contain old wp-content/, wp-config.php, etc
+## Restoring wp-content data from backup
 
 ```bash
-docker exec -i test-wordpress sh -c 'rm -rf /var/www/html/*'
-docker cp wordpress_data/ test-wordpress:/var/www/
-docker exec -i test-wordpress sh -c 'mv /var/www/wordpress_data/* /var/www/html'
-docker exec -i test-wordpress sh -c 'chown -R www-data:www-data /var/www/html'
-docker exec -i test-wordpress sh -c 'rm -rfd /var/www/wordpress_data'
+docker cp wp-content/ uadopomoga-wordpress:/tmp/wp-content/
+docker exec -i uadopomoga-wordpress sh -c 'rm -rf /var/www/html/wp-content'
+docker exec -i uadopomoga-wordpress sh -c 'mv /tmp/wp-content/ /var/www/html/wp-content/'
+docker exec -i uadopomoga-wordpress sh -c 'chown -R www-data:www-data /var/www/html/wp-content/'
+docker restart uadopomoga-wordpress
 ```
 
-## Creating WP data backup
+## Creating backup with wp-content data
 
 ```bash
-docker cp test-wordpress:/var/www/html wordpress_data/
+docker cp uadopomoga-wordpress:/var/www/html/wp-content wp-content/
 ```
 
 ## WP-CLI usage
