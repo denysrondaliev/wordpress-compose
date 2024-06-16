@@ -11,7 +11,7 @@ services:
     expose:
       - "3306"
     healthcheck:
-      test: healthcheck.sh --su=root --connect
+      test: healthcheck.sh --connect --innodb_initialized
       interval: 120s
       timeout: 5s
       retries: 2
