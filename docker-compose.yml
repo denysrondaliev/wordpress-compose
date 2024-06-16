@@ -38,7 +38,7 @@ services:
   wordpress-cli:
     container_name: ${PROJECT_TAG}-wordpress-cli
     image: wordpress:cli-php8.3
-    user: "33"
+    user: "www-data"
     depends_on:
       mariadb:
         condition: service_started
