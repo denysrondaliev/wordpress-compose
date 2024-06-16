@@ -56,7 +56,9 @@ docker cp test-wordpress:/var/www/html wordpress_data/
 ## WP-CLI usage
 
 ```bash
-docker compose run --rm wordpress-cli "--info"
+# wp cli version
+
+docker compose run --rm wordpress-cli "cli" "version"
 ```
 
 ## Setup nginx as proxy server
