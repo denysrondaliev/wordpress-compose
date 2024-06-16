@@ -18,6 +18,7 @@ services:
   wordpress:
     container_name: ${PROJECT_TAG}-wordpress
     image: wordpress:6-php8.3-apache
+    user: "nobody"
     depends_on:
       mariadb:
         condition: service_started
@@ -26,7 +27,7 @@ services:
     volumes:
       - "wordpress_data:/var/www/html"
     ports:
-      - "${WORDPRESS_PORT}:80/tcp"
+      - "${WORDPRESS_PORT}:8080/tcp"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
