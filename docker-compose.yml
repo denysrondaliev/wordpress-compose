@@ -10,8 +10,6 @@ services:
     restart: unless-stopped
     expose:
       - "3306"
-    sysctls:
-      net.ipv6.conf.all.disable_ipv6: 1
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
       interval: 120s

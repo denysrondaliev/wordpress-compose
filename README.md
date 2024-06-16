@@ -21,16 +21,16 @@ Note that you need to fix URL value at **wp_options** table, if it is different 
 File **dump_name.sql** should contain old WP database and tables. Value $WORDPRESS_DB_NAME must match this database
 
 ```bash
-docker exec -i uadopomoga-mariadb sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
-docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
-docker exec -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
+docker exec -u root -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD"' < dump_name.sql
+docker exec -u root -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO $MARIADB_USER;"'
+docker exec -u root -i uadopomoga-mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD" -D $MARIADB_DATABASE -e "FLUSH PRIVILEGES;"'
 docker restart uadopomoga-mariadb
 ```
 
 ## Creating SQL dump file with MariaDB data
 
 ```bash
-docker exec test-mariadb sh -c 'mariadb-dump --all-databases --debug-info -u root -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
+docker exec test-mariadb sh -c 'mariadb-dump -u root --databases $MARIADB_DATABASE --debug-info -p"$MARIADB_ROOT_PASSWORD"' > dump_name.sql
 ```
 
 ## Restoring wp-content data from backup

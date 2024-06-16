@@ -6,7 +6,7 @@ TARGET_PATH=/backups/dumps/daily
 
 # creating SQL dump file with MariaDB data
 # starts every day at 02:00 AM
-0 2 * * * root export DATE=$(date +\%H-\%M_\%m-\%d-\%y) && mkdir -p $TARGET_PATH && docker exec $PROJECT_TAG-mariadb sh -c 'mariadb-dump --all-databases -u root -p"$MARIADB_ROOT_PASSWORD" | gzip' >$TARGET_PATH/dump_$DATE.sql.gz
+0 2 * * * root export DATE=$(date +\%H-\%M_\%m-\%d-\%y) && mkdir -p $TARGET_PATH && docker exec $PROJECT_TAG-mariadb sh -c 'mariadb-dump -u root --databases $MARIADB_DATABASE --debug-info -p"$MARIADB_ROOT_PASSWORD" | gzip' >$TARGET_PATH/dump_$DATE.sql.gz
 
 # delete files older than 14 days
 # starts every day at 03:00 AM
