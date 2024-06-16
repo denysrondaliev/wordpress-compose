@@ -18,7 +18,6 @@ services:
   wordpress:
     container_name: ${PROJECT_TAG}-wordpress
     image: wordpress:6-php8.3-apache
-    user: "nobody"
     depends_on:
       mariadb:
         condition: service_started
