@@ -11,6 +11,7 @@
 git clone https://github.com/unleftie/wordpress-compose.git
 cd wordpress-compose
 cp .env.example .env
+chmod 755 -R mariadb
 docker compose up -d
 ```
 
