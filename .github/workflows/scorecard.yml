@@ -2,7 +2,7 @@ name: Scorecard
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 4 1 * *"
+    - cron: "5 4 1 * *" # at 04:05 on day-of-month 1
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -13,37 +13,37 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      security-events: write # Needed to upload the results to code-scanning dashboard.
-      id-token: write # Needed to publish results and get a badge.
+      security-events: write
+      id-token: write
       contents: read
       actions: read
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Run analysis
-        uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46 # v2.4.0
+        uses: ossf/scorecard-action@v2
         with:
           results_file: results.sarif
           results_format: sarif
           publish_results: true
 
       - name: Upload artifact
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        uses: actions/upload-artifact@v4
         with:
           name: scorecard_result_files
           path: results.*
           retention-days: 5
 
       - name: Upload to code-scanning
-        uses: github/codeql-action/upload-sarif@eb055d739abdc2e8de2e5f4ba1a8b246daa779aa # v3.26.0
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
